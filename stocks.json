@@ -1,0 +1,8 @@
+{
+    "stocks": [
+        {"symbol": "DE", "target_price": 346.00},
+        {"symbol": "KO", "target_price": 59.4},
+        {"symbol": "UA", "target_price": 6.12},
+        {"symbol": "CCL", "target_price": 19.5}
+    ]
+}
