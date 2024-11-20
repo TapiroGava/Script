@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Azioni</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Azioni Monitorate</h1>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Simbolo</th>
+                <th>Prezzo Target</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.symbol }}</td>
+                <td>{{ stock.target_price }}</td>
+                <td>
+                    <button onclick="deleteStock('{{ stock.symbol }}')">Rimuovi</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Aggiungi Azione</h2>
+    <form id="addStockForm">
+        <label for="symbol">Simbolo:</label>
+        <input type="text" id="symbol" name="symbol" required>
+        <label for="target_price">Prezzo Target:</label>
+        <input type="number" step="0.01" id="target_price" name="target_price" required>
+
+        <button type="submit">Aggiungi</button>
+    </form>
+
+    <script>
+        // Funzione per aggiungere un'azione
+        document.getElementById("addStockForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const symbol = document.getElementById("symbol").value;
+            const target_price = document.getElementById("target_price").value;
+
+            const response = await fetch("/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `symbol=${symbol}&target_price=${target_price}`,
+            });
+            const result = await response.json();
+            alert(result.message);
+            location.reload(); // Ricarica la pagina
+        });
+
+        // Funzione per rimuovere un'azione
+        async function deleteStock(symbol) {
+            const response = await fetch("/delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `symbol=${symbol}`,
+            });
+            const result = await response.json();
+            alert(result.message);
+            location.reload(); // Ricarica la pagina
+        }
+    </script>
+</body>
+</html>
